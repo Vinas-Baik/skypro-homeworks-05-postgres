@@ -8,18 +8,18 @@ from utils.svn_utils import *
 
 TABLES = [{'file_name': os.getcwd() + '\\north_data\\customers_data.csv',
            'table': 'customers',
-           # 'values': 'customer_id, company_name, contact_name',
-           # 'type_values': 'int, str, str'
+           'values': 'customer_id, company_name, contact_name',
+           'type_values': 'int, str, str'
            },
           {'file_name': os.getcwd() + '\\north_data\\employees_data.csv',
            'table': 'employees',
-           # 'values': 'employee_id, first_name, last_name, title, birth_date, notes',
-           # 'type_values': 'int, str, str, str, date, str'
+           'values': 'employee_id, first_name, last_name, title, birth_date, notes',
+           'type_values': 'int, str, str, str, date, str'
            },
           {'file_name': os.getcwd() + '\\north_data\\orders_data.csv',
            'table': 'orders',
-           # 'values': 'order_id, customer_id, employee_id, order_date, ship_city',
-           # 'type_values': 'int, str, int, date, str'
+           'values': 'order_id, customer_id, employee_id, order_date, ship_city',
+           'type_values': 'int, str, int, date, str'
            }
           ]
 
@@ -46,50 +46,42 @@ def user_menu() -> str:
 
 def load_from_csv_in_table(table):
 
-    # with open(table['file_name'], 'r', encoding='UTF-8') as file:
-    #     rows = csv.reader(file)
-    #     count_row_csv = 0
-    #     values_file = ''
-    #     for row in rows:
-    #         if count_row_csv == 0:
-    #             values_file = row
-    #         else:
-    #             print(f'Оригинал - {row}')
-    #             print(f'Отрезка - {",".join(row)}')
-    #             # try:
-    #             #     with psycopg2.connect(host=DB_HOST, database=DB_BASE,
-    #             #                           user=DB_USER,
-    #             #                           password=DB_PASSWORD) as conn_sql:
-    #             #         # print(conn_sql.status)
-    #             #         with conn_sql.cursor() as cur_sql:
-    #             #             # print(cur_sql.statusmessage)
-    #             #             cur_sql.execute(f'INSERT INTO {table["table"]} '
-    #             #                             f'VALUES ({row[1:-2]});')
-    #             #
-    #             #
-    #             #         conn_sql.commit()
-    #             #
-    #             # finally:
-    #             #     conn_sql.close()
-    #
-    #         count_row_csv += 1
+    with open(table['file_name'], 'r', encoding='UTF-8') as file:
+        rows = csv.reader(file)
+        count_row_csv = 0
+        values_file = ''
+        for row in rows:
+            if count_row_csv == 0:
+                values_file = tuple(row)
+                print(values_file)
+            else:
+                print(f'Строка - {tuple(row)}')
+                # try:
+                #     with psycopg2.connect(host=DB_HOST, database=DB_BASE,
+                #                           user=DB_USER,
+                #                           password=DB_PASSWORD) as conn_sql:
+                #         # print(conn_sql.status)
+                #         with conn_sql.cursor() as cur_sql:
+                #             # print(cur_sql.statusmessage)
+                #             cur_sql.execute(f'INSERT INTO {table["table"]} '
+                #                             f'VALUES ({row[1:-2]});')
+                #
+                #
+                #         conn_sql.commit()
+                #
+                # finally:
+                #     conn_sql.close()
 
-    # conn = psycopg2.connect(
-    #     "host=localhost dbname=postgres user=postgres password=1111111")
-    # cur = conn.cursor()
-    # with open('file.csv', 'r', encoding="utf-8") as f:
-    #     next(f)
-    #     cur.copy_from(f, 'table_name', sep=',')
-    # conn.commit()
+            count_row_csv += 1
 
     with psycopg2.connect(host=DB_HOST, database=DB_BASE,
                           user=DB_USER, password=DB_PASSWORD) as conn_sql:
         # print(conn_sql.status)
         with conn_sql.cursor() as cur_sql:
-            with open(table['file_name'], 'r') as file:
-                next(file)
-                cur_sql.copy_from(file, table["table"], sep=',')
-            conn_sql.commit()
+            # with open(table['file_name'], 'r') as file:
+            #     next(file)
+            #     cur_sql.copy_from(file, table["table"], sep=',')
+            # conn_sql.commit()
             # print(cur_sql.statusmessage)
             cur_sql.execute(f'SELECT COUNT(*) FROM {table["table"]}')
             print(f'Добавлено в таблицу \033[34m{table["table"]}\033[39m '
