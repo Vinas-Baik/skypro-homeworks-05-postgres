@@ -37,7 +37,7 @@ def user_menu() -> str:
     print()
     print('\t\033[31m[0]\033[39m - выход из программы')
 
-    menu_item: str = '012'.strip()
+    menu_item: str = '0123'.strip()
 
     user_input: str = check_line_entry(
         f'Выберите пункт меню ({", ".join(menu_item)})',
@@ -139,7 +139,7 @@ def main():
             for table in TABLES:
                 count_items = count_items_table(table['table'])
                 if count_items != 0:
-                    print(f'\033[31mТаблица {table["table"]} содержит '
+                    print(f'\033[31mТаблица {table["table"].upper()} содержит '
                           f'{count_items} записей \033[39m')
                     print(f'Таблицу {table["table"]} нужно очистить '
                           f'перед добавлением записей из файла')
@@ -148,6 +148,11 @@ def main():
                           f"\033[33m{table['table'].upper()}\033[39m")
                     load_from_csv_in_table(table)
 
+        elif user_input == '3':
+            for table in TABLES:
+                count_items = count_items_table(table['table'])
+                print(f'Таблица \033[32m{table["table"].upper()}\033[39m содержит '
+                      f'\033[33m{count_items} записей \033[39m')
 
 if __name__ == '__main__':
     main()
