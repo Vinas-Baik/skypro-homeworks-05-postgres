@@ -8,6 +8,9 @@ where ship_country in ('France', 'Germany', 'Spain')
 
 -- 2. уникальные страны и города, куда отправлялись заказы, отсортировать по
 -- странам и городам (таблица orders, колонки ship_country, ship_city)
+select DISTINCT ship_country, ship_city
+from orders
+order by ship_country, ship_city
 
 
 -- 3. сколько дней в среднем уходит на доставку товара в Германию
