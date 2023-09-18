@@ -21,6 +21,9 @@ where ship_country like '%ermany%'
 
 -- 4. минимальную и максимальную цену среди продуктов, не снятых с продажи
 -- (таблица products, колонки unit_price, discontinued не равно 1)
+SELECT MIN(unit_price) as min_price, MAX(unit_price)
+FROM products
+where discontinued <> 1
 
 
 -- 5. минимальную и максимальную цену среди продуктов, не снятых с продажи и
