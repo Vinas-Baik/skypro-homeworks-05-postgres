@@ -18,4 +18,7 @@ order by city ASC
 select COUNT(*) as count_orders
 from orders
 
--- 5. количество стран, в которые отгружался товар (таблица orders, колонка ship_country)
+-- 5. количество стран, в которые отгружался товар (таблица orders,
+-- колонка ship_country)
+select count(DISTINCT ship_country) as count_ship_country
+from orders
