@@ -15,6 +15,7 @@ from customers
 order by city ASC
 
 -- 4. количество заказов (таблица orders)
-
+select COUNT(*) as count_orders
+from orders
 
 -- 5. количество стран, в которые отгружался товар (таблица orders, колонка ship_country)
