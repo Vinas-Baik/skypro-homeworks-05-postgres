@@ -40,7 +40,19 @@ HAVING SUM(freight) > 30
 order by SUM(freight) DESC
 
 
--- 6. страны, в которых зарегистрированы и заказчики (customers) и поставщики (suppliers) и работники (employees).
+-- 6. страны, в которых зарегистрированы и заказчики (customers)
+-- и поставщики (suppliers) и работники (employees).
+select country from customers
+INTERSECT
+select country from suppliers
+INTERSECT
+select country from employees
 
 
--- 7. страны, в которых зарегистрированы и заказчики (customers) и поставщики (suppliers), но не зарегистрированы работники (employees).
+-- 7. страны, в которых зарегистрированы и заказчики (customers) и
+-- поставщики (suppliers), но не зарегистрированы работники (employees).
+select country from customers
+INTERSECT
+select country from suppliers
+EXCEPT
+select country from employees
