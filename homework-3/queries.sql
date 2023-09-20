@@ -51,7 +51,7 @@ where customer_id NOT in (select customer_id
 
 -- Запрос написан с использованием подзапроса
 
-SELECT DISTINCT product_name
+SELECT DISTINCT product_name as "Продукты, которых заказано 10 единиц"
 FROM products
 where product_id in (SELECT product_id
                      from order_details
@@ -60,7 +60,7 @@ ORDER BY product_name
 
 -- Запрос написан с JOIN
 
-SELECT DISTINCT products.product_name
+SELECT DISTINCT products.product_name  as "Продукты, которых заказано 10 единиц"
 FROM products
 INNER JOIN order_details USING (product_id)
 where order_details.quantity = 10
