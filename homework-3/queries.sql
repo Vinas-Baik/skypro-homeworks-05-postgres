@@ -5,8 +5,8 @@
 -- а доставку заказа ведет компания United Package (company_name в табл shippers)
 
 
-SELECT customers.company_name as 'Название компании',
-       CONCAT(employees.first_name, ' ', employees.last_name) as 'ФИО сотрудника'
+SELECT customers.company_name as "Название компании",
+       CONCAT(employees.first_name, ' ', employees.last_name) as "ФИО сотрудника"
 from orders
 INNER JOIN customers USING (customer_id)
 INNER JOIN employees USING (employee_id)
