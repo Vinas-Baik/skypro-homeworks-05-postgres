@@ -1,6 +1,19 @@
 -- Напишите запросы, которые выводят следующую информацию:
--- 1. Название компании заказчика (company_name из табл. customers) и ФИО сотрудника, работающего над заказом этой компании (см таблицу employees),
--- когда и заказчик и сотрудник зарегистрированы в городе London, а доставку заказа ведет компания United Package (company_name в табл shippers)
+-- 1. Название компании заказчика (company_name из табл. customers) и ФИО сотрудника,
+-- работающего над заказом этой компании (см таблицу employees),
+-- когда и заказчик и сотрудник зарегистрированы в городе London,
+-- а доставку заказа ведет компания United Package (company_name в табл shippers)
+
+SELECT * from shippers
+where company_name='United Package'
+
+SELECT * from customers
+where city = 'London'
+
+SELECT * from employees
+where city = 'London'
+
+
 
 
 -- 2. Наименование продукта, количество товара (product_name и units_in_stock в табл products),
