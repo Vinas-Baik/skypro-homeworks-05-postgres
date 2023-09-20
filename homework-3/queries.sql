@@ -4,16 +4,6 @@
 -- когда и заказчик и сотрудник зарегистрированы в городе London,
 -- а доставку заказа ведет компания United Package (company_name в табл shippers)
 
--- SELECT * from shippers
--- where company_name='United Package'
-
--- SELECT * from customers
--- where city = 'London'
-
--- SELECT CONCAT(first_name, ' ', last_name) from employees
--- where city = 'London'
-
--- select * from orders
 
 SELECT customers.company_name, CONCAT(employees.first_name, ' ', employees.last_name)
 from orders
@@ -30,6 +20,8 @@ where shippers.company_name='United Package' and
 -- имя поставщика и его телефон (contact_name и phone в табл suppliers) для таких продуктов,
 -- которые не сняты с продажи (поле discontinued) и которых меньше 25 и которые в категориях Dairy Products и Condiments.
 -- Отсортировать результат по возрастанию количества оставшегося товара.
+
+
 
 
 -- 3. Список компаний заказчиков (company_name из табл customers), не сделавших ни одного заказа
