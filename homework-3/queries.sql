@@ -22,14 +22,17 @@ where shippers.company_name='United Package' and
 -- которые не сняты с продажи (поле discontinued) и которых меньше 25 и которые в категориях Dairy Products и Condiments.
 -- Отсортировать результат по возрастанию количества оставшегося товара.
 
-select products.product_name, products.units_in_stock
+select products.product_name as "Наименование продукта",
+       products.units_in_stock as "Количество товара",
+       suppliers.contact_name as "Имя поставщика",
+       suppliers.phone as "Телефон поставщика"
 from products
-
+inner join categories USING (category_id)
+inner join suppliers USING (supplier_id)
 where products.discontinued = 0 and
-      products.units_in_stock < 25
-
-select * from categories
-where category_name in ('Dairy Products', 'Condiments')
+      products.units_in_stock < 25 and
+      categories.category_name in ('Dairy Products', 'Condiments')
+order by products.units_in_stock
 
 
 -- 3. Список компаний заказчиков (company_name из табл customers), не сделавших ни одного заказа
