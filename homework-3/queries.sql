@@ -46,5 +46,23 @@ where customer_id NOT in (select customer_id
 
 
 
--- 4. уникальные названия продуктов, которых заказано ровно 10 единиц (количество заказанных единиц см в колонке quantity табл order_details)
+-- 4. уникальные названия продуктов, которых заказано ровно 10 единиц
+-- (количество заказанных единиц см в колонке quantity табл order_details)
 -- Этот запрос написать именно с использованием подзапроса.
+
+-- Запрос написан с использованием подзапроса
+
+SELECT DISTINCT product_name
+FROM products
+where product_id in (SELECT product_id
+                     from order_details
+                     where quantity = 10)
+ORDER BY product_name
+
+-- Запрос написан с JOIN
+
+SELECT DISTINCT products.product_name
+FROM products
+INNER JOIN order_details USING (product_id)
+where order_details.quantity = 10
+ORDER BY products.product_name

@@ -14,3 +14,12 @@ select * from suppliers
 
 select * from categories
 where category_name in ('Dairy Products', 'Condiments')
+
+SELECT *
+FROM products
+
+
+SELECT DISTINCT product_id
+                     from order_details
+                     where quantity = 10
+order by product_id
