@@ -1,3 +1,11 @@
+Доброго дня 
+>
+> мои результаты в папке **svn_result** 
+>
+![image](https://github.com/Vinas-Baik/skypro-homeworks-05-postgres/assets/123475829/b5bec004-2133-436d-a1a3-30bf12f731ce)
+
+
+
 # Продвинутый синтаксис. Домашнее задание
 
 ### Написание sql-запросов
