@@ -4,15 +4,25 @@
 -- когда и заказчик и сотрудник зарегистрированы в городе London,
 -- а доставку заказа ведет компания United Package (company_name в табл shippers)
 
-SELECT * from shippers
-where company_name='United Package'
+-- SELECT * from shippers
+-- where company_name='United Package'
 
-SELECT * from customers
-where city = 'London'
+-- SELECT * from customers
+-- where city = 'London'
 
-SELECT * from employees
-where city = 'London'
+-- SELECT CONCAT(first_name, ' ', last_name) from employees
+-- where city = 'London'
 
+-- select * from orders
+
+SELECT customers.company_name, CONCAT(employees.first_name, ' ', employees.last_name)
+from orders
+INNER JOIN customers USING (customer_id)
+INNER JOIN employees USING (employee_id)
+INNER JOIN shippers ON shippers.shipper_id=orders.ship_via
+where shippers.company_name='United Package' and
+      customers.city = 'London' and
+      employees.city = 'London'
 
 
 
