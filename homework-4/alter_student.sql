@@ -21,7 +21,7 @@ ALTER TABLE student ADD COLUMN middle_name varchar;
 ALTER TABLE student DROP COLUMN middle_name;
 
 -- 4. Переименовать колонку birthday в birth_date
-
+ALTER TABLE student RENAME COLUMN birthday TO birth_date;
 
 -- 5. Изменить тип данных колонки phone на varchar(32)
 
