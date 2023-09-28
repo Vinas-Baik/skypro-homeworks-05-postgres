@@ -7,11 +7,13 @@ def config(filename="database.ini", section="postgresql"):
     # read config file
     parser.read(filename)
     db = {}
+
     if parser.has_section(section):
-        params = parser.items(section)
-        for param in params:
-            db[param[0]] = param[1]
+        # params = parser.items(section)
+        # for param in params:
+        #     db[param[0]] = param[1]
+        db = dict(parser.items(section))
     else:
-        raise Exception(
-            'Section {0} is not found in the {1} file.'.format(section, filename))
+        raise Exception('Section {0} is not found in the {1} file'
+                        '.'.format(section.upper(), filename.upper()))
     return db
