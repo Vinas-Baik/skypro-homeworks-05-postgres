@@ -140,8 +140,6 @@ def get_suppliers_data(json_file: str) -> list[dict]:
     # формируем полный путь до файла
     name_file = os.getcwd() + '\\' + json_file
 
-    # name_file1 = 'C:\\Users\\user\\Мой диск (svn1409@gmail.com)\\Обучение\\skypro\\Проекты\\kurs03-skypro\\utils\\test.json'
-
     try:
         if os.path.exists(name_file):
             with open(name_file, 'r', encoding='UTF-8') as file:
@@ -179,33 +177,40 @@ def insert_suppliers_data(cur, suppliers: list[dict]) -> None:
         #     fax varchar(15),'
         #     homepage varchar(150) NOT NULL);')
         supp_id = t_key + 1
-        # print(t_sup)
-        sql_command = f'INSERT INTO suppliers(supplier_id, company_name, ' \
-                      f'contact, address, phone, fax, homepage) ' \
-                      f'VALUES ({supp_id}, ' \
-                      f'\'{replace_appostrof(t_sup["company_name"])}\',' \
-                      f'\'{replace_appostrof(t_sup["contact"])}\', ' \
-                      f'\'{replace_appostrof(t_sup["address"])}\', ' \
-                      f'\'{replace_appostrof(t_sup["phone"])}\', ' \
-                      f'\'{replace_appostrof(t_sup["fax"])}\', ' \
-                      f'\'{replace_appostrof(t_sup["homepage"])}\');'
-        print(sql_command)
-        cur.execute(sql_command)
+        # cur.execute(sql_command)
+        cur.execute('INSERT INTO suppliers(supplier_id, company_name, ' \
+                    'contact, address, phone, fax, homepage) ' \
+                    'VALUES (%s, %s, %s, %s, %s, %s, %s);',
+                    (supp_id, t_sup["company_name"], t_sup["contact"],
+                     t_sup["address"], t_sup["phone"], t_sup["fax"],
+                     t_sup["homepage"]))
         # print(t_sup['products'])
-        for t_prod in t_sup['products']:
-            t_prod = t_prod.replace('\'', '\'\'')
+        sql_command = ("SELECT product_id FROM products "
+                       "WHERE product_name IN %s") %t_sup['products']
 
-            sql_command = f'SELECT product_id from products ' \
-                          f'where product_name=\'{t_prod}\''
-            print(sql_command)
-            cur.execute(sql_command)
-            prod_id = int(cur.fetchone()[0])
-            # print(f'{t_prod} | {prod_id} | {supp_id}')
-            if prod_id != 0:
-                sql_command = f'INSERT INTO supplier_product(supplier_id, product_id)' \
-                              f'VALUES ({supp_id}, {prod_id})'
-                print(sql_command)
-                cur.execute(sql_command)
+        sql_command = sql_command.replace('[', '(').replace(']', ')')
+        # print(sql_command)
+        cur.execute(sql_command)
+        # print(cur.fetchall())
+
+        cur.executemany()
+
+
+        # for t_prod in t_sup['products']:
+        #     # t_prod = t_prod.replace('\'', '\'\'')
+        #
+        #     # sql_command = f'SELECT product_id from products ' \
+        #     #               f'where product_name=\'{t_prod}\''
+        #     # print(sql_command)
+        #     cur.execute('SELECT product_id FROM products WHERE '
+        #                 'product_name=%s', (t_prod))
+        #     prod_id = int(cur.fetchone()[0])
+        #     # print(f'{t_prod} | {prod_id} | {supp_id}')
+        #     if prod_id != 0:
+        #         sql_command = f'INSERT INTO supplier_product(supplier_id, product_id)' \
+        #                       f'VALUES ({supp_id}, {prod_id})'
+        #         print(sql_command)
+        #         cur.execute(sql_command)
 
 
 def add_foreign_keys(cur, json_file) -> None:
