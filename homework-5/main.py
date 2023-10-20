@@ -15,7 +15,8 @@ def main():
     conn = None
     # читаем параметры для подключения из ini файла
     try:
-        params = config(filename="database.ini", section="postgresql")
+        # params = config(filename="database.ini", section="postgresql")
+        params = config()
     except Exception as error:
         print(error)
         return
