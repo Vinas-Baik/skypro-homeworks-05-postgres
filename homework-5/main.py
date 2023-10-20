@@ -155,19 +155,14 @@ def get_suppliers_data(json_file: str) -> list[dict]:
     return json_list
 
 
-# def decode_utf8(st: str) -> str:
-#     """
-#     замена одного апострофа ' на двойные для нормального добавления в SQL базу через команду execute
-#     """
-#     return st.decode('utf8')
-
 def replace_appostrof(st: str) -> str:
     return st.replace('\'', '\'\'')
+
 
 def insert_suppliers_data(cur, suppliers: list[dict]) -> None:
     """Добавляет данные из suppliers в таблицу suppliers."""
     for t_key, t_sup in enumerate(suppliers):
-        print(t_sup)
+        # print(t_sup)
         #     'CREATE TABLE suppliers(
         #     supplier_id smallint PRIMARY KEY NOT NULL,'
         #     company_name varchar(50) NOT NULL,'
@@ -185,32 +180,23 @@ def insert_suppliers_data(cur, suppliers: list[dict]) -> None:
                      t_sup["address"], t_sup["phone"], t_sup["fax"],
                      t_sup["homepage"]))
         # print(t_sup['products'])
+        for t_key, t_prod in enumerate(t_sup['products']):
+            t_sup['products'][t_key] = t_prod.replace('\'', '\'\'')
+
         sql_command = ("SELECT product_id FROM products "
                        "WHERE product_name IN %s") %t_sup['products']
 
-        sql_command = sql_command.replace('[', '(').replace(']', ')')
+        sql_command = sql_command.replace('[', '(').replace(']', ')').replace('"', "'")
         # print(sql_command)
         cur.execute(sql_command)
-        # print(cur.fetchall())
+        prod_list = cur.fetchall()
+        # print(prod_list)
+        for prod_id in prod_list:
+            # print(f'{supp_id} | {prod_id[0]}')
+            cur.execute('INSERT INTO supplier_product(supplier_id, product_id) '
+                        'VALUES (%s, %s)', (supp_id, prod_id[0]))
 
-        cur.executemany()
-
-
-        # for t_prod in t_sup['products']:
-        #     # t_prod = t_prod.replace('\'', '\'\'')
-        #
-        #     # sql_command = f'SELECT product_id from products ' \
-        #     #               f'where product_name=\'{t_prod}\''
-        #     # print(sql_command)
-        #     cur.execute('SELECT product_id FROM products WHERE '
-        #                 'product_name=%s', (t_prod))
-        #     prod_id = int(cur.fetchone()[0])
-        #     # print(f'{t_prod} | {prod_id} | {supp_id}')
-        #     if prod_id != 0:
-        #         sql_command = f'INSERT INTO supplier_product(supplier_id, product_id)' \
-        #                       f'VALUES ({supp_id}, {prod_id})'
-        #         print(sql_command)
-        #         cur.execute(sql_command)
+        # print('--------------------')
 
 
 def add_foreign_keys(cur, json_file) -> None:
