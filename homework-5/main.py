@@ -155,8 +155,8 @@ def get_suppliers_data(json_file: str) -> list[dict]:
     return json_list
 
 
-def replace_appostrof(st: str) -> str:
-    return st.replace('\'', '\'\'')
+# def replace_appostrof(st: str) -> str:
+#     return st.replace('\'', '\'\'')
 
 
 def insert_suppliers_data(cur, suppliers: list[dict]) -> None:
