@@ -1,4 +1,5 @@
 import json
+import os
 
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
@@ -40,6 +41,7 @@ def main():
 
     try:
         with psycopg2.connect(**params) as conn:
+            conn.autocommit = True
             with conn.cursor() as cur:
                 execute_sql_script(cur, script_file)
                 print(f"БД {db_name} успешно заполнена")
@@ -61,6 +63,7 @@ def main():
         print(error)
     finally:
         if conn:
+            conn.commit()
             cur.close()
             conn.close()
 
@@ -106,25 +109,103 @@ def remove_database(params, db_name):
 def execute_sql_script(cur, script_file) -> None:
     """Выполняет скрипт из файла для заполнения БД данными."""
 
-    with open(script_file) as f:
+    with open(os.getcwd() + '\\' + script_file, 'r') as f:
          cur.execute(f.read())
 
 
 
 def create_suppliers_table(cur) -> None:
     """Создает таблицу suppliers."""
-    cur.execute('CREATE TABLE suppliers('
-                ');')
+    cur.execute('CREATE TABLE suppliers(supplier_id smallint PRIMARY KEY NOT NULL,'
+                                       'company_name varchar(50) NOT NULL,'
+                                       'contact varchar(50) NOT NULL,'
+                                       'address varchar(100) NOT NULL,'
+                                       'phone varchar(15),'
+                                       'fax varchar(15),'
+                                       'homepage varchar(150) NOT NULL);')
 
+    # Создаем таблицу supplier_product для хранения ссылок на продукты поставщиков.
+    cur.execute('CREATE TABLE supplier_product(supplier_id smallint,'
+                'product_id smallint,'
+                'sup_prod_id serial PRIMARY KEY NOT NULL);')
 
 def get_suppliers_data(json_file: str) -> list[dict]:
     """Извлекает данные о поставщиках из JSON-файла и возвращает список словарей с соответствующей информацией."""
-    pass
+    """
+    Загрузка JSON словаря с файла
+    name_file:  имя файла c JSON словарем
+    :return: список JSON
+    """
+    json_list = None  # словарь
+    # формируем полный путь до файла
+    name_file = os.getcwd() + '\\' + json_file
 
+    # name_file1 = 'C:\\Users\\user\\Мой диск (svn1409@gmail.com)\\Обучение\\skypro\\Проекты\\kurs03-skypro\\utils\\test.json'
+
+    try:
+        if os.path.exists(name_file):
+            with open(name_file, 'r', encoding='UTF-8') as file:
+                json_list = json.load(file)
+        else:                                       # если файла нет, то ошибка
+            # print(text_error('Файл ' + name_file + ' не существует, проверьте наличие файла по указанному пути'))
+            json_list = None
+
+    except json.JSONDecodeError:                    # если ошибка чтения JSON словаря, то выводим ошибку
+        # print(text_error('Файл ' + name_file + ' не является JSON файлом'))
+        json_list = None
+
+    return json_list
+
+
+# def decode_utf8(st: str) -> str:
+#     """
+#     замена одного апострофа ' на двойные для нормального добавления в SQL базу через команду execute
+#     """
+#     return st.decode('utf8')
+
+def replace_appostrof(st: str) -> str:
+    return st.replace('\'', '\'\'')
 
 def insert_suppliers_data(cur, suppliers: list[dict]) -> None:
     """Добавляет данные из suppliers в таблицу suppliers."""
-    pass
+    for t_key, t_sup in enumerate(suppliers):
+        print(t_sup)
+        #     'CREATE TABLE suppliers(
+        #     supplier_id smallint PRIMARY KEY NOT NULL,'
+        #     company_name varchar(50) NOT NULL,'
+        #     contact varchar(50) NOT NULL,'
+        #     address varchar(50) NOT NULL,'
+        #     phone varchar(15),'
+        #     fax varchar(15),'
+        #     homepage varchar(150) NOT NULL);')
+        supp_id = t_key + 1
+        # print(t_sup)
+        sql_command = f'INSERT INTO suppliers(supplier_id, company_name, ' \
+                      f'contact, address, phone, fax, homepage) ' \
+                      f'VALUES ({supp_id}, ' \
+                      f'\'{replace_appostrof(t_sup["company_name"])}\',' \
+                      f'\'{replace_appostrof(t_sup["contact"])}\', ' \
+                      f'\'{replace_appostrof(t_sup["address"])}\', ' \
+                      f'\'{replace_appostrof(t_sup["phone"])}\', ' \
+                      f'\'{replace_appostrof(t_sup["fax"])}\', ' \
+                      f'\'{replace_appostrof(t_sup["homepage"])}\');'
+        print(sql_command)
+        cur.execute(sql_command)
+        # print(t_sup['products'])
+        for t_prod in t_sup['products']:
+            t_prod = t_prod.replace('\'', '\'\'')
+
+            sql_command = f'SELECT product_id from products ' \
+                          f'where product_name=\'{t_prod}\''
+            print(sql_command)
+            cur.execute(sql_command)
+            prod_id = int(cur.fetchone()[0])
+            # print(f'{t_prod} | {prod_id} | {supp_id}')
+            if prod_id != 0:
+                sql_command = f'INSERT INTO supplier_product(supplier_id, product_id)' \
+                              f'VALUES ({supp_id}, {prod_id})'
+                print(sql_command)
+                cur.execute(sql_command)
 
 
 def add_foreign_keys(cur, json_file) -> None:
