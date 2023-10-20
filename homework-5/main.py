@@ -200,10 +200,9 @@ def insert_suppliers_data(cur, suppliers: list[dict]) -> None:
 
 
 def add_foreign_keys(cur) -> None:
-    """Добавляет foreign key со ссылкой на supplier_id в таблицу products."""
-    # ALTER TABLE ONLY orders
-    # ADD     CONSTRAINT     fk_orders_customers    FOREIGN KEY(customer_id)
-    # REFERENCES    customers;
+    """
+    Добавляет foreign key со ссылкой на supplier_id в таблицу products.
+    """
 
     cur.execute('ALTER TABLE ONLY supplier_product '
                 'ADD CONSTRAINT fk_supplier_supprod FOREIGN KEY (supplier_id) '
