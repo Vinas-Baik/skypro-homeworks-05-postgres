@@ -77,7 +77,11 @@ def create_database(params, db_name):
         cur = conn.cursor()
         sql_create_database = f'CREATE DATABASE {db_name}'
         cur.execute(sql_create_database)
-        # print(cur.statusmessage)
+
+        sql_create_database = f"ALTER ROLE {params['user']} " \
+                              f"SET client_encoding TO 'utf8'"
+        cur.execute(sql_create_database)
+        # print(params)
     except (Exception, Error) as error:
         # print("Ошибка при работе с PostgreSQL: ", error)
         raise Exception(f"Ошибка при работе с PostgreSQL: {error}")
